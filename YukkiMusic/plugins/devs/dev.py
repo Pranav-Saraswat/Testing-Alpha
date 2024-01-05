@@ -21,8 +21,8 @@ from inspect import getfullargspec
 from io import StringIO
 from time import time
 
-from pyrogram import filters
-from pyrogram.types import (
+from hydrogram import filters
+from hydrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,

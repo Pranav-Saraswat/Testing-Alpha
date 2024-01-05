@@ -7,7 +7,7 @@
 #
 # All rights reserved.
 
-from pyrogram import filters
+from hydrogram import filters
 
 import config
 from strings import get_command

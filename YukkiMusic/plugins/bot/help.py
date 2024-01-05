@@ -11,8 +11,8 @@
 
 from typing import Union
 
-from pyrogram import filters, types
-from pyrogram.types import InlineKeyboardMarkup, Message
+from hydrogram import filters, types
+from hydrogram.types import InlineKeyboardMarkup, Message
 
 from config import BANNED_USERS
 from strings import get_command, get_string, helpers

@@ -2,7 +2,7 @@
 
 # Yukki Music Bot <img src="https://img.shields.io/github/v/release/TeamYukki/YukkiMusicBot?color=black&logo=github&logoColor=black&style=social" alt="RELEASE">
 
-[Yukki Music Bot](https://github.com/TeamYukki/YukkiMusicBot) is a Powerful Telegram Music+Video Bot written in Python using Pyrogram and Py-Tgcalls by which you can stream songs, video and even live streams in your group calls via various sources.
+[Yukki Music Bot](https://github.com/TeamYukki/YukkiMusicBot) is a Powerful Telegram Music+Video Bot written in Python using Hydrogram and Py-Tgcalls by which you can stream songs, video and even live streams in your group calls via various sources.
 
 * Youtube, Soundcloud, Apple Music, Spotify, Resso, Live Streams and Telegram Audios & Videos support.
 * Written from scratch, making it stable and less crashes with attractive thumbnails.
@@ -20,7 +20,7 @@
 <a href="https://dashboard.heroku.com/new?template=https://github.com/Pranav-Saraswat/Testing-Alpha"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a>
 
 
-## 🖇 Generating Pyrogram String Session
+## 🖇 Generating Hydrogram String Session
 
 <p>
 <a href="https://replit.com/@NotReallyShikhar/Yukki-Music-String-Gen"><img src="https://img.shields.io/badge/Generate%20On%20Repl-blueviolet?style=for-the-badge&logo=appveyor" width="200""/></a>
@@ -51,7 +51,7 @@ Together, we can make **YukkiMusicBot** better!
 
 Special thanks to these amazing projects/people which/who help power Yukki Music Bot:
 
-- [Pyrogram](https://github.com/pyrogram/pyrogram)
+- [Hydrogram](https://github.com/hydrogram/hydrogram)
 - [Py-Tgcalls](https://github.com/pytgcalls/pytgcalls)
 - [TheHamkerCat](https://github.com/TheHamkerCat)
 - [Aarav Arora](https://github.com/axrav)

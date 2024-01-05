@@ -10,7 +10,7 @@
 
 import asyncio
 
-from pyrogram.types import InlineKeyboardMarkup
+from hydrogram.types import InlineKeyboardMarkup
 
 from strings import get_string
 from YukkiMusic.misc import db

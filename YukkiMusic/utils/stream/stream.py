@@ -12,7 +12,7 @@ import os
 from random import randint
 from typing import Union
 
-from pyrogram.types import InlineKeyboardMarkup
+from hydrogram.types import InlineKeyboardMarkup
 
 import config
 from YukkiMusic import Carbon, YouTube, app

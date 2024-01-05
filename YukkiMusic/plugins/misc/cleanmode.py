@@ -11,10 +11,10 @@
 import asyncio
 from datetime import datetime, timedelta
 
-from pyrogram import filters
-from pyrogram.enums import ChatMembersFilter, ChatMemberStatus
-from pyrogram.errors import FloodWait
-from pyrogram.raw import types
+from hydrogram import filters
+from hydrogram.enums import ChatMembersFilter, ChatMemberStatus
+from hydrogram.errors import FloodWait
+from hydrogram.raw import types
 
 import config
 from config import adminlist, chatstats, clean, userstats

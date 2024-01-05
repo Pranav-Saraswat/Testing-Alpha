@@ -8,7 +8,7 @@
 # All rights reserved.
 #
 
-from pyrogram import filters
+from hydrogram import filters
 
 from config import BANNED_USERS
 from YukkiMusic import YouTube, app

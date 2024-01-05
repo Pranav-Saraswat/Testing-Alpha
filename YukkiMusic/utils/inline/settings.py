@@ -10,7 +10,7 @@
 
 from typing import Union
 
-from pyrogram.types import InlineKeyboardButton
+from hydrogram.types import InlineKeyboardButton
 
 
 def setting_markup(_):

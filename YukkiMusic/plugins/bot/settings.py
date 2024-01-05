@@ -8,10 +8,10 @@
 # All rights reserved.
 #
 
-from pyrogram import filters
-from pyrogram.enums import ChatType
-from pyrogram.errors import MessageNotModified
-from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
+from hydrogram import filters
+from hydrogram.enums import ChatType
+from hydrogram.errors import MessageNotModified
+from hydrogram.types import (CallbackQuery, InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
 from config import (BANNED_USERS, CLEANMODE_DELETE_MINS,

@@ -10,7 +10,7 @@
 
 from typing import Union
 
-from pyrogram.types import Message
+from hydrogram.types import Message
 
 
 def get_readable_time(seconds: int) -> str:

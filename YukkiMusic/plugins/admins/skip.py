@@ -8,8 +8,8 @@
 # All rights reserved.
 #s
 
-from pyrogram import filters
-from pyrogram.types import InlineKeyboardMarkup, Message
+from hydrogram import filters
+from hydrogram.types import InlineKeyboardMarkup, Message
 
 import config
 from config import BANNED_USERS

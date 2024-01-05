@@ -8,7 +8,7 @@
 # All rights reserved.
 #
 
-from pyrogram.types import (InlineKeyboardButton,
+from hydrogram.types import (InlineKeyboardButton,
                             InlineKeyboardMarkup,
                             InlineQueryResultPhoto)
 from youtubesearchpython.__future__ import VideosSearch

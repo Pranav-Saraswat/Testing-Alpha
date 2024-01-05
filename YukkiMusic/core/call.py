@@ -12,12 +12,12 @@ import asyncio
 from datetime import datetime, timedelta
 from typing import Union
 
-from pyrogram import Client
-from pyrogram.enums import ChatMemberStatus
-from pyrogram.errors import (ChatAdminRequired,
+from hydrogram import Client
+from hydrogram.enums import ChatMemberStatus
+from hydrogram.errors import (ChatAdminRequired,
                              UserAlreadyParticipant,
                              UserNotParticipant)
-from pyrogram.types import InlineKeyboardMarkup
+from hydrogram.types import InlineKeyboardMarkup
 from pytgcalls import PyTgCalls
 from pytgcalls.exceptions import (AlreadyJoinedError,
                                   NoActiveGroupCall,

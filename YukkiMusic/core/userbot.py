@@ -10,7 +10,7 @@
 
 import sys
 
-from pyrogram import Client
+from hydrogram import Client
 
 import config
 

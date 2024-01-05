@@ -9,7 +9,7 @@
 #
 
 
-from pyrogram.types import InlineKeyboardButton
+from hydrogram.types import InlineKeyboardButton
 
 
 def song_markup(_, vidid):

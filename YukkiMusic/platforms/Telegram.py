@@ -14,7 +14,7 @@ import time
 from datetime import datetime, timedelta
 from typing import Union
 
-from pyrogram.types import (InlineKeyboardButton,
+from hydrogram.types import (InlineKeyboardButton,
                             InlineKeyboardMarkup, Voice)
 
 import config

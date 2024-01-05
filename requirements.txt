@@ -5,6 +5,7 @@ ffmpeg-python
 gitpython
 hachoir
 heroku3
+hydrogram
 lyricsgenius
 motor
 ntgcalls
@@ -12,7 +13,6 @@ pillow
 psutil
 pykeyboard
 py-tgcalls
-git+https://github.com/KurimuzonAkuma/pyrogram@dev
 python-dotenv
 pyyaml
 requests

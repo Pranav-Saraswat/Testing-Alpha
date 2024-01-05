@@ -10,7 +10,7 @@
 
 import random
 
-from pyrogram.types import InlineKeyboardButton
+from hydrogram.types import InlineKeyboardButton
 
 selections = [
     "▁▄▂▇▄▅▄▅▃",

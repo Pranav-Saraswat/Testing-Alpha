@@ -10,8 +10,8 @@
 
 import asyncio
 
-from pyrogram import filters
-from pyrogram.types import InlineKeyboardMarkup
+from hydrogram import filters
+from hydrogram.types import InlineKeyboardMarkup
 
 from config import BANNED_USERS
 from YukkiMusic import app

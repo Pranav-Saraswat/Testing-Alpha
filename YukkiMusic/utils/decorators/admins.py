@@ -8,8 +8,8 @@
 # All rights reserved.
 #
 
-from pyrogram.enums import ChatType, ChatMemberStatus
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from hydrogram.enums import ChatType, ChatMemberStatus
+from hydrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import adminlist
 from strings import get_string
 from YukkiMusic import app

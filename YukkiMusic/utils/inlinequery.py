@@ -8,7 +8,7 @@
 # All rights reserved.
 #
 
-from pyrogram.types import (InlineQueryResultArticle,
+from hydrogram.types import (InlineQueryResultArticle,
                             InputTextMessageContent)
 
 answer = [

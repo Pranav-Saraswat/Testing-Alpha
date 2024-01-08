@@ -14,15 +14,12 @@ import time
 from datetime import datetime, timedelta
 from typing import Union
 
-from pyrogram.types import (InlineKeyboardButton,
-                            InlineKeyboardMarkup, Voice)
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Voice
 
 import config
 from config import MUSIC_BOT_NAME, lyrical
 from YukkiMusic import app
-
-from ..utils.formatters import (convert_bytes, get_readable_time,
-                                seconds_to_min)
+from ..utils.formatters import convert_bytes, get_readable_time, seconds_to_min
 
 downloader = {}
 
@@ -34,7 +31,7 @@ class TeleAPI:
 
     async def send_split_text(self, message, string):
         n = self.chars_limit
-        out = [(string[i : i + n]) for i in range(0, len(string), n)]
+        out = [(string[i: i + n]) for i in range(0, len(string), n)]
         j = 0
         for x in out:
             if j <= 2:
@@ -43,28 +40,18 @@ class TeleAPI:
         return True
 
     async def get_link(self, message):
-        if message.chat.username:
-            return f"https://t.me/{message.chat.username}/{message.reply_to_message.id}"
-        xf = str((message.chat.id))[4:]
-        return f"https://t.me/c/{xf}/{message.reply_to_message.id}"
+        username = message.chat.username
+        chat_id = str(message.chat.id)[4:]
+        return f"https://t.me/{username}/{message.reply_to_message.id}" if username else f"https://t.me/c/{chat_id}/{message.reply_to_message.id}"
 
-    async def get_filename(
-        self, file, audio: Union[bool, str] = None
-    ):
+    async def get_filename(self, file, audio: Union[bool, str] = None):
         try:
-            file_name = file.file_name
-            if file_name is None:
-                file_name = (
-                    "Telegram Audio File"
-                    if audio
-                    else "Telegram Video File"
-                )
-
+            file_name = file.file_name or (
+                "Telegram Audio File" if audio else "Telegram Video File"
+            )
         except:
             file_name = (
-                "Telegram Audio File"
-                if audio
-                else "Telegram Video File"
+                "Telegram Audio File" if audio else "Telegram Video File"
             )
         return file_name
 
@@ -75,11 +62,7 @@ class TeleAPI:
             dur = "Unknown"
         return dur
 
-    async def get_filepath(
-        self,
-        audio: Union[bool, str] = None,
-        video: Union[bool, str] = None,
-    ):
+    async def get_filepath(self, audio: Union[bool, str] = None, video: Union[bool, str] = None):
         if audio:
             try:
                 file_name = (
@@ -93,10 +76,8 @@ class TeleAPI:
                 )
             except:
                 file_name = f"{audio.file_unique_id}..ogg"
-            file_name = os.path.join(
-                os.path.realpath("downloads"), file_name
-            )
-        if video:
+            file_name = os.path.join(os.path.realpath("downloads"), file_name)
+        elif video:
             try:
                 file_name = (
                     video.file_unique_id
@@ -105,14 +86,13 @@ class TeleAPI:
                 )
             except:
                 file_name = f"{video.file_unique_id}.mp4"
-            file_name = os.path.join(
-                os.path.realpath("downloads"), file_name
-            )
+            file_name = os.path.join(os.path.realpath("downloads"), file_name)
         return file_name
 
     async def download(self, _, message, mystic, fname):
         left_time = {}
         speed_counter = {}
+
         if os.path.exists(fname):
             return True
 
@@ -139,9 +119,7 @@ class TeleAPI:
                     speed = current / check_time
                     eta = int((total - current) / speed)
                     downloader[message.id] = eta
-                    eta = get_readable_time(eta)
-                    if not eta:
-                        eta = "0 sec"
+                    eta = get_readable_time(eta) if eta else "0 sec"
                     total_size = convert_bytes(total)
                     completed_size = convert_bytes(current)
                     speed = convert_bytes(speed)
@@ -179,12 +157,9 @@ class TeleAPI:
                 await mystic.edit_text(_["tg_2"])
 
         if len(downloader) > 10:
-            timers = []
-            for x in downloader:
-                timers.append(downloader[x])
+            timers = list(downloader.values())
             try:
-                low = min(timers)
-                eta = get_readable_time(low)
+                eta = get_readable_time(min(timers))
             except:
                 eta = "Unknown"
             await mystic.edit_text(_["tg_1"].format(eta))

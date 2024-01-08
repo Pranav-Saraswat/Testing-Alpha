@@ -14,19 +14,17 @@ from pyrogram.types import InlineKeyboardMarkup
 
 from strings import get_string
 from YukkiMusic.misc import db
-from YukkiMusic.utils.database import (get_active_chats, get_lang,
-                                       is_music_playing)
+from YukkiMusic.utils.database import get_active_chats, get_lang, is_music_playing
 from YukkiMusic.utils.formatters import seconds_to_min
-from YukkiMusic.utils.inline import (stream_markup_timer,
-                                     telegram_markup_timer)
-
+from YukkiMusic.utils.inline import stream_markup_timer, telegram_markup_timer
 from ..admins.callback import wrong
 
 checker = {}
 
 
 async def timer():
-    while not await asyncio.sleep(1):
+    while True:
+        await asyncio.sleep(1)
         active_chats = await get_active_chats()
         for chat_id in active_chats:
             if not await is_music_playing(chat_id):
@@ -47,7 +45,8 @@ asyncio.create_task(timer())
 
 
 async def markup_timer():
-    while not await asyncio.sleep(4):
+    while True:
+        await asyncio.sleep(4)
         active_chats = await get_active_chats()
         for chat_id in active_chats:
             try:

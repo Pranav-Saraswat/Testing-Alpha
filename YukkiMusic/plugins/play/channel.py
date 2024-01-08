@@ -35,11 +35,14 @@ async def playmode_(client, message: Message, _):
                 message.chat.title, CHANNELPLAY_COMMAND[0]
             )
         )
+    
     query = message.text.split(None, 2)[1].lower().strip()
-    if (str(query)).lower() == "disable":
+    
+    if query.lower() == "disable":
         await set_cmode(message.chat.id, None)
         return await message.reply_text("Channel Play Disabled")
-    elif str(query) == "linked":
+    
+    elif query == "linked":
         chat = await app.get_chat(message.chat.id)
         if not chat.linked_chat:
             return await message.reply_text(_["cplay_2"])
@@ -50,27 +53,33 @@ async def playmode_(client, message: Message, _):
                 chat.linked_chat.title, chat.linked_chat.id
             )
         )
+    
     else:
         try:
             chat = await app.get_chat(query)
         except:
             return await message.reply_text(_["cplay_4"])
+        
         if chat.type != ChatType.CHANNEL:
             return await message.reply_text(_["cplay_5"])
+        
         try:
             admins = app.get_chat_members(
                 chat.id, filter=ChatMembersFilter.ADMINISTRATORS
             )
         except:
             return await message.reply_text(_["cplay_4"])
+        
         async for users in admins:
             if users.status == ChatMemberStatus.OWNER:
                 creatorusername = users.user.username
                 creatorid = users.user.id
+        
         if creatorid != message.from_user.id:
             return await message.reply_text(
                 _["cplay_6"].format(chat.title, creatorusername)
             )
+        
         await set_cmode(message.chat.id, chat.id)
         return await message.reply_text(
             _["cplay_3"].format(chat.title, chat.id)

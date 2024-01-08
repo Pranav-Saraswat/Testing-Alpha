@@ -9,65 +9,60 @@
 #
 
 import sys
-
 from pyrogram import Client
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import BotCommand
-
-import config
-
-from ..logging import LOGGER
+from config import API_ID, API_HASH, BOT_TOKEN, LOG_GROUP_ID, SET_CMDS
+from logging import LOGGER
 
 
 class YukkiBot(Client):
     def __init__(self):
-        LOGGER(__name__).info("Starting Bot")
         super().__init__(
             "YukkiMusicBot",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            bot_token=config.BOT_TOKEN,
+            api_id=API_ID,
+            api_hash=API_HASH,
+            bot_token=BOT_TOKEN,
         )
+        LOGGER(__name__).info("Starting Bot")
 
     async def start(self):
         await super().start()
-        get_me = await self.get_me()
-        self.username = get_me.username
-        self.id = get_me.id
+        me = await self.get_me()
+        self.username = me.username
+        self.id = me.id
         try:
-            await self.send_message(
-                config.LOG_GROUP_ID, "Bot Started"
-            )
-        except:
+            await self.send_message(LOG_GROUP_ID, "Bot Started")
+        except Exception as e:
             LOGGER(__name__).error(
-                "Bot has failed to access the log Group. Make sure that you have added your bot to your log channel and promoted as admin!"
+                f"Bot has failed to access the log Group. Error: {e}\nMake sure that you have added your bot to your log channel and promoted as admin!"
             )
             sys.exit()
-        if config.SET_CMDS == str(True):
+
+        if SET_CMDS:
             try:
-                await self.set_bot_commands(
-                    [
-                        BotCommand("ping", "Check that bot is alive or dead"),
-                        BotCommand("play", "Starts playing the requested song"),
-                        BotCommand("skip", "Moves to the next track in queue"),
-                        BotCommand("pause", "Pause the current playing song"),
-                        BotCommand("resume", "Resume the paused song"),
-                        BotCommand("end", "Clear the queue and leave voice chat"),
-                        BotCommand("shuffle", "Randomly shuffles the queued playlist."),
-                        BotCommand("playmode", "Allows you to change the default playmode for your chat"),
-                        BotCommand("settings", "Open the settings of the music bot for your chat.")
-                        ]
-                    )
-            except:
-                pass
-        a = await self.get_chat_member(config.LOG_GROUP_ID, self.id)
-        if a.status != ChatMemberStatus.ADMINISTRATOR:
-            LOGGER(__name__).error(
-                "Please promote Bot as Admin in Logger Group"
-            )
+                await self.set_bot_commands([
+                    BotCommand("ping", "Check that bot is alive or dead"),
+                    BotCommand("play", "Starts playing the requested song"),
+                    BotCommand("skip", "Moves to the next track in queue"),
+                    BotCommand("pause", "Pause the current playing song"),
+                    BotCommand("resume", "Resume the paused song"),
+                    BotCommand("end", "Clear the queue and leave voice chat"),
+                    BotCommand("shuffle", "Randomly shuffles the queued playlist."),
+                    BotCommand("playmode", "Allows you to change the default playmode for your chat"),
+                    BotCommand("settings", "Open the settings of the music bot for your chat.")
+                ])
+            except Exception as e:
+                LOGGER(__name__).warning(f"Failed to set bot commands. Error: {e}")
+
+        try:
+            member_status = await self.get_chat_member(LOG_GROUP_ID, self.id).status
+            if member_status != ChatMemberStatus.ADMINISTRATOR:
+                LOGGER(__name__).error("Please promote Bot as Admin in Logger Group")
+                sys.exit()
+        except Exception as e:
+            LOGGER(__name__).error(f"Error checking admin status in the Logger Group: {e}")
             sys.exit()
-        if get_me.last_name:
-            self.name = f"{get_me.first_name} {get_me.last_name}"
-        else:
-            self.name = get_me.first_name
+
+        self.name = f"{me.first_name} {me.last_name}" if me.last_name else me.first_name
         LOGGER(__name__).info(f"MusicBot Started as {self.name}")

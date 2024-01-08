@@ -20,14 +20,8 @@ from YukkiMusic.utils.database import (blacklist_chat,
                                        whitelist_chat)
 from YukkiMusic.utils.decorators.language import language
 
-# Commands
 
-BLACKLISTCHAT_COMMAND = get_command("BLACKLISTCHAT_COMMAND")
-WHITELISTCHAT_COMMAND = get_command("WHITELISTCHAT_COMMAND")
-BLACKLISTEDCHAT_COMMAND = get_command("BLACKLISTEDCHAT_COMMAND")
-
-
-@app.on_message(filters.command(BLACKLISTCHAT_COMMAND) & SUDOERS)
+@app.on_message(filters.command("blacklistchat") & SUDOERS)
 @language
 async def blacklist_chat_func(client, message: Message, _):
     if len(message.command) != 2:
@@ -46,9 +40,9 @@ async def blacklist_chat_func(client, message: Message, _):
         pass
 
 
-@app.on_message(filters.command(WHITELISTCHAT_COMMAND) & SUDOERS)
+@app.on_message(filters.command("whitelistchat") & SUDOERS)
 @language
-async def white_funciton(client, message: Message, _):
+async def whitelist_chat_func(client, message: Message, _):
     if len(message.command) != 2:
         return await message.reply_text(_["black_4"])
     chat_id = int(message.text.strip().split()[1])
@@ -61,7 +55,7 @@ async def white_funciton(client, message: Message, _):
 
 
 @app.on_message(
-    filters.command(BLACKLISTEDCHAT_COMMAND) & ~BANNED_USERS
+    filters.command("blacklistedchat") & ~BANNED_USERS
 )
 @language
 async def all_chats(client, message: Message, _):

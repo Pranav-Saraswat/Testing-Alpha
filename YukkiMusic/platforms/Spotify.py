@@ -9,6 +9,7 @@
 #
 
 import re
+from typing import Union
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from youtubesearchpython.__future__ import VideosSearch
@@ -19,84 +20,88 @@ class SpotifyAPI:
         self.regex = r"^(https:\/\/open.spotify.com\/)(.*)$"
         self.client_id = config.SPOTIFY_CLIENT_ID
         self.client_secret = config.SPOTIFY_CLIENT_SECRET
-        if config.SPOTIFY_CLIENT_ID and config.SPOTIFY_CLIENT_SECRET:
-            self.client_credentials_manager = SpotifyClientCredentials(
+        self.spotify = self.initialize_spotify()
+
+    def initialize_spotify(self):
+        if self.client_id and self.client_secret:
+            client_credentials_manager = SpotifyClientCredentials(
                 self.client_id, self.client_secret
             )
-            self.spotify = spotipy.Spotify(
-                client_credentials_manager=self.client_credentials_manager
-            )
+            return spotipy.Spotify(client_credentials_manager=client_credentials_manager)
         else:
-            self.spotify = None
+            return None
 
-    async def valid(self, link: str):
+    async def valid(self, link: str) -> bool:
         return bool(re.search(self.regex, link))
 
-    async def track(self, link: str):
-        track = self.spotify.track(link)
+    async def get_track_info(self, track) -> dict:
         info = track["name"]
         for artist in track["artists"]:
             fetched = f' {artist["name"]}'
             if "Various Artists" not in fetched:
                 info += fetched
-        results = VideosSearch(info, limit=1)
-        for result in (await results.next())["result"]:
-            ytlink = result["link"]
-            title = result["title"]
-            vidid = result["id"]
-            duration_min = result["duration"]
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-        track_details = {
-            "title": title,
-            "link": ytlink,
-            "vidid": vidid,
-            "duration_min": duration_min,
-            "thumb": thumbnail,
-        }
-        return track_details, vidid
+        return info
 
-    async def playlist(self, url):
+    async def track(self, link: str) -> Union[dict, None]:
+        if not self.spotify:
+            return None
+
+        track = self.spotify.track(link)
+        info = await self.get_track_info(track)
+
+        results = VideosSearch(info, limit=1)
+        result = (await results.next())["result"][0]
+
+        track_details = {
+            "title": result["title"],
+            "link": result["link"],
+            "vidid": result["id"],
+            "duration_min": result["duration"],
+            "thumb": result["thumbnails"][0]["url"].split("?")[0],
+        }
+
+        return track_details, result["id"]
+
+    async def playlist(self, url: str) -> Union[list, None]:
+        if not self.spotify:
+            return None
+
         playlist = self.spotify.playlist(url)
         playlist_id = playlist["id"]
         results = []
+
         for item in playlist["tracks"]["items"]:
             music_track = item["track"]
-            info = music_track["name"]
-            for artist in music_track["artists"]:
-                fetched = f' {artist["name"]}'
-                if "Various Artists" not in fetched:
-                    info += fetched
+            info = await self.get_track_info(music_track)
             results.append(info)
+
         return results, playlist_id
 
-    async def album(self, url):
+    async def album(self, url: str) -> Union[tuple, None]:
+        if not self.spotify:
+            return None
+
         album = self.spotify.album(url)
         album_id = album["id"]
         results = []
+
         for item in album["tracks"]["items"]:
-            info = item["name"]
-            for artist in item["artists"]:
-                fetched = f' {artist["name"]}'
-                if "Various Artists" not in fetched:
-                    info += fetched
+            info = await self.get_track_info(item)
             results.append(info)
 
-        return (
-            results,
-            album_id,
-        )
+        return results, album_id
 
-    async def artist(self, url):
-        artistinfo = self.spotify.artist(url)
-        artist_id = artistinfo["id"]
+    async def artist(self, url: str) -> Union[list, None]:
+        if not self.spotify:
+            return None
+
+        artist_info = self.spotify.artist(url)
+        artist_id = artist_info["id"]
         results = []
-        artisttoptracks = self.spotify.artist_top_tracks(url)
-        for item in artisttoptracks["tracks"]:
-            info = item["name"]
-            for artist in item["artists"]:
-                fetched = f' {artist["name"]}'
-                if "Various Artists" not in fetched:
-                    info += fetched
+
+        artist_top_tracks = self.spotify.artist_top_tracks(url)
+        for item in artist_top_tracks["tracks"]:
+            info = await self.get_track_info(item)
             results.append(info)
 
         return results, artist_id

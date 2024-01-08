@@ -21,10 +21,8 @@ from config import BANNED_USERS
 from strings import get_command
 from YukkiMusic import app
 from YukkiMusic.misc import db
-from YukkiMusic.utils import (Yukkibin, get_channeplayCB,
-                              seconds_to_min)
-from YukkiMusic.utils.database import (get_cmode, is_active_chat,
-                                       is_music_playing)
+from YukkiMusic.utils import Yukkibin, get_channeplayCB, seconds_to_min
+from YukkiMusic.utils.database import get_cmode, is_active_chat, is_music_playing
 from YukkiMusic.utils.decorators.language import language, languageCB
 from YukkiMusic.utils.inline import queue_back_markup, queue_markup
 
@@ -49,11 +47,7 @@ def get_duration(playing):
     return "Unknown" if duration_seconds == 0 else "Inline"
 
 
-@app.on_message(
-    filters.command(QUEUE_COMMAND) 
-    & filters.group 
-    & ~BANNED_USERS
-)
+@app.on_message(filters.command(QUEUE_COMMAND) & filters.group & ~BANNED_USERS)
 @language
 async def ping_com(client, message: Message, _):
     if message.command[0][0] == "c":
@@ -96,9 +90,9 @@ async def ping_com(client, message: Message, _):
     else:
         IMAGE = get_image(videoid)
     send = (
-        "**⌛️Duration:** Unknown Duration Stream\n\nClick on button below to get whole queued list."
+        "**⌛️Duration:** Unknown Duration Stream\n\nClick on button below to get the whole queued list."
         if DUR == "Unknown"
-        else "\nClick on button below to get whole queued list."
+        else "\nClick on the button below to get the whole queued list."
     )
     cap = f"""**{config.MUSIC_BOT_NAME} Player**
 
@@ -223,9 +217,7 @@ async def queued_tracks(client, CallbackQuery: CallbackQuery, _):
         )
 
 
-@app.on_callback_query(
-    filters.regex("queue_back_timer") & ~BANNED_USERS
-)
+@app.on_callback_query(filters.regex("queue_back_timer") & ~BANNED_USERS)
 @languageCB
 async def queue_back(client, CallbackQuery: CallbackQuery, _):
     callback_data = CallbackQuery.data.strip()
@@ -269,9 +261,9 @@ async def queue_back(client, CallbackQuery: CallbackQuery, _):
     else:
         IMAGE = get_image(videoid)
     send = (
-        "**⌛️Duration:** Unknown Duration Stream\n\nClick on button below to get whole queued list."
+        "**⌛️Duration:** Unknown Duration Stream\n\nClick on the button below to get the whole queued list."
         if DUR == "Unknown"
-        else "\nClick on button below to get whole queued list."
+        else "\nClick on the button below to get the whole queued list."
     )
     cap = f"""**{config.MUSIC_BOT_NAME} Player**
 

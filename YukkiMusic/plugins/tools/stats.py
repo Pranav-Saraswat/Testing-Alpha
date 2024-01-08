@@ -163,13 +163,13 @@ async def top_users_ten(client, CallbackQuery: CallbackQuery, _):
                 else stats[i]["spot"]
             )
             results[str(i)] = top_list
-            list_arranged = dict(
-                sorted(
-                    results.items(),
-                    key=lambda item: item[1],
-                    reverse=True,
-                )
+        list_arranged = dict(
+            sorted(
+                results.items(),
+                key=lambda item: item[1],
+                reverse=True,
             )
+        )
         if not results:
             return mystic.edit(_["gstats_2"], reply_markup=upl)
         msg = ""
@@ -363,9 +363,9 @@ async def overall_stats(client, CallbackQuery, _):
 
 **Python Version :** {pyver.split()[0]}
 **Pyrogram Version :** {pyrover}
-**Py-TgCalls Version :** {pytgver}
-**N-Tgcalls Version :** {ngtgver}
-**Storage Avail:** {total[:4]} GiB
+**PyTgCalls Version :** {pytgver}
+**NTgcalls Version :** {ngtgver}
+**Storage Available:** {total[:4]} GiB
 **Storage Used:** {used[:4]} GiB
 **Storage Left:** {free[:4]} GiB
 

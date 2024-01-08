@@ -18,18 +18,14 @@ from YukkiMusic.misc import SUDOERS
 from YukkiMusic.utils.database import add_off, add_on
 from YukkiMusic.utils.decorators.language import language
 
-# Commands
-VIDEOMODE_COMMAND = get_command("VIDEOMODE_COMMAND")
 
-
-@app.on_message(filters.command(VIDEOMODE_COMMAND) & SUDOERS)
+@app.on_message(filters.command("videomode") & SUDOERS)
 @language
-async def videoloaymode(client, message: Message, _):
+async def videomode_command(client, message: Message, _):
     usage = _["vidmode_1"]
     if len(message.command) != 2:
         return await message.reply_text(usage)
-    state = message.text.split(None, 1)[1].strip()
-    state = state.lower()
+    state = message.text.split(None, 1)[1].strip().lower()
     if state == "download":
         await add_on(config.YTDOWNLOADER)
         await message.reply_text(_["vidmode_2"])

@@ -13,6 +13,7 @@ from YukkiMusic.core.dir import dirr
 from YukkiMusic.core.git import git
 from YukkiMusic.core.userbot import Userbot
 from YukkiMusic.misc import dbb, heroku, sudo
+from YukkiMusic.platforms import YouTubeAPI, CarbonAPI, SpotifyAPI, AppleAPI, RessoAPI, SoundAPI, TeleAPI
 
 from .logging import LOGGER
 
@@ -36,8 +37,6 @@ app = YukkiBot()
 
 # Assistant Client
 userbot = Userbot()
-
-from .platforms import *
 
 YouTube = YouTubeAPI()
 Carbon = CarbonAPI()

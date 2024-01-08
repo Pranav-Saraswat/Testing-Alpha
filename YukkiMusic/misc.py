@@ -16,41 +16,17 @@ from pyrogram import filters
 
 import config
 from YukkiMusic.core.mongo import pymongodb
-
 from .logging import LOGGER
 
 SUDOERS = filters.user()
 
-HAPP = None
-_boot_ = time.time()
-
-
 def is_heroku():
     return "heroku" in socket.getfqdn()
-
-
-XCB = [
-    "/",
-    "@",
-    ".",
-    "com",
-    ":",
-    "git",
-    "heroku",
-    "push",
-    str(config.HEROKU_API_KEY),
-    "https",
-    str(config.HEROKU_APP_NAME),
-    "HEAD",
-    "main",
-]
-
 
 def dbb():
     global db
     db = {}
     LOGGER(__name__).info("Database Initialized.")
-
 
 def sudo():
     global SUDOERS
@@ -76,7 +52,6 @@ def sudo():
                 SUDOERS.add(x)
     LOGGER(__name__).info("Sudoers Loaded.")
 
-
 def heroku():
     global HAPP
     if is_heroku:
@@ -89,3 +64,10 @@ def heroku():
                 LOGGER(__name__).warning(
                     "Please make sure your Heroku API Key and Your App name are configured correctly in the heroku."
                 )
+
+def initialize():
+    dbb()
+    sudo()
+    heroku()
+
+initialize()

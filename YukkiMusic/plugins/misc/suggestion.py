@@ -23,18 +23,17 @@ from YukkiMusic.utils.database import (get_lang,
 
 LEAVE_TIME = config.AUTO_SUGGESTION_TIME
 
-
 suggestor = {}
 
 strings = [
     item for item in get_string("en") if item[:3] == "sug" and item != "sug_0"
 ]
 
-
 async def dont_do_this():
     if config.AUTO_SUGGESTION_MODE != str(True):
         return
-    while not await asyncio.sleep(LEAVE_TIME):
+    while True:
+        await asyncio.sleep(LEAVE_TIME)
         try:
             if config.PRIVATE_BOT_MODE == str(True):
                 schats = await get_private_served_chats()
@@ -59,9 +58,8 @@ async def dont_do_this():
                 except:
                     _ = get_string("en")
                 string = random.choice(strings)
-                if previous := suggestor.get(x):
-                    while previous == (string.split("_")[1]):
-                        string = random.choice(strings)
+                if x in suggestor and suggestor[x] == string.split("_")[1]:
+                    continue
                 suggestor[x] = string.split("_")[1]
                 try:
                     msg = _["sug_0"] + _[string]
@@ -71,10 +69,7 @@ async def dont_do_this():
                     time_now = datetime.now()
                     put = {
                         "msg_id": sent.id,
-                        "timer_after": time_now
-                        + timedelta(
-                            minutes=config.CLEANMODE_DELETE_MINS
-                        ),
+                        "timer_after": time_now + timedelta(minutes=config.CLEANMODE_DELETE_MINS),
                     }
                     clean[x].append(put)
                     send_to += 1
@@ -82,6 +77,5 @@ async def dont_do_this():
                     pass
         except:
             pass
-
 
 asyncio.create_task(dont_do_this())

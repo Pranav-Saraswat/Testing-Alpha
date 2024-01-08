@@ -17,6 +17,7 @@ from YukkiMusic.misc import SUDOERS
 from YukkiMusic.utils.database import add_off, add_on
 from YukkiMusic.utils.decorators.language import language
 
+
 # Commands
 LOGGER_COMMAND = get_command("LOGGER_COMMAND")
 
@@ -27,8 +28,9 @@ async def logger(client, message, _):
     usage = _["log_1"]
     if len(message.command) != 2:
         return await message.reply_text(usage)
-    state = message.text.split(None, 1)[1].strip()
-    state = state.lower()
+    
+    state = message.text.split(None, 1)[1].strip().lower()
+    
     if state == "enable":
         await add_on(config.LOG)
         await message.reply_text(_["log_2"])

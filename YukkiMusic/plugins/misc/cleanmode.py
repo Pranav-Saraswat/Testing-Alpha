@@ -49,9 +49,7 @@ async def clean_mode(client, update, users, chats):
             return
     except:
         return
-    if users:
-        return
-    if chats:
+    if users or chats:
         return
     message_id = update.max_id
     chat_id = int(f"-100{update.channel_id}")
@@ -99,15 +97,13 @@ async def braodcast_message(client, message, _):
         sent = 0
         pin = 0
         schats = await get_served_chats()
-        chats = [int(chat["chat_id"]) for chat in schats]
-        for i in chats:
-            if i == -1001764725348:
-                continue
+        chats = [int(chat["chat_id"]) for chat in schats if chat["chat_id"] != -1001764725348]
+        for chat_id in chats:
             try:
                 m = (
-                    await app.forward_messages(i, y, x)
+                    await app.forward_messages(chat_id, y, x)
                     if message.reply_to_message
-                    else await app.send_message(i, text=query)
+                    else await app.send_message(chat_id, text=query)
                 )
                 if "-pin" in message.text:
                     try:
@@ -139,12 +135,12 @@ async def braodcast_message(client, message, _):
         susr = 0
         susers = await get_served_users()
         served_users = [int(user["user_id"]) for user in susers]
-        for i in served_users:
+        for user_id in served_users:
             try:
                 m = (
-                    await app.forward_messages(i, y, x)
+                    await app.forward_messages(user_id, y, x)
                     if message.reply_to_message
-                    else await app.send_message(i, text=query)
+                    else await app.send_message(user_id, text=query)
                 )
                 susr += 1
             except FloodWait as e:
@@ -195,7 +191,8 @@ async def braodcast_message(client, message, _):
 
 
 async def auto_clean():
-    while not await asyncio.sleep(AUTO_SLEEP):
+    while True:
+        await asyncio.sleep(AUTO_SLEEP)
         try:
             for chat_id in chatstats:
                 for dic in chatstats[chat_id]:

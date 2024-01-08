@@ -246,318 +246,209 @@ async def without_Admin_rights(client, CallbackQuery, _):
             await CallbackQuery.answer(_["set_cb_3"], show_alert=True)
         except:
             pass
-        is_non_admin = await is_nonadmin_chat(
-            CallbackQuery.message.chat.id
+        # Audio Video Quality
+        @app.on_callback_query(
+            filters.regex(pattern=r"^(LOW|MEDIUM|HIGH|STUDIO|SD_360p|SD_480p|HD_720p|FHD_1080p|QHD_2K|UHD_4K)$")
+            & ~BANNED_USERS
         )
-        buttons = auth_users_markup(_) if is_non_admin else auth_users_markup(_, True)
-    try:
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    except MessageNotModified:
-        return
-
-
-# Audio Video Quality
-
-
-@app.on_callback_query(
-    filters.regex(pattern=r"^(LOW|MEDIUM|HIGH|STUDIO|SD_360p|SD_480p|HD_720p|FHD_1080p|QHD_2K|UHD_4K)$")
-    & ~BANNED_USERS
-)
-@ActualAdminCB
-async def aud_vid_cb(client, CallbackQuery, _):
-    command = CallbackQuery.matches[0].group(1)
-    try:
-        await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
-    except:
-        pass
-    if command == "LOW":
-        await save_audio_bitrate(CallbackQuery.message.chat.id, "LOW")
-        buttons = audio_quality_markup(_, LOW=True)
-    if command == "MEDIUM":
-        await save_audio_bitrate(
-            CallbackQuery.message.chat.id, "MEDIUM"
-        )
-        buttons = audio_quality_markup(_, MEDIUM=True)
-    if command == "HIGH":
-        await save_audio_bitrate(
-            CallbackQuery.message.chat.id, "HIGH"
-        )
-        buttons = audio_quality_markup(_, HIGH=True)
-    if command == "STUDIO":
-        await save_audio_bitrate(
-            CallbackQuery.message.chat.id, "STUDIO"
-        )
-        buttons = audio_quality_markup(_, STUDIO=True)
-    if command == "SD_360p":
-        await save_video_bitrate(CallbackQuery.message.chat.id, "SD_360p")
-        buttons = video_quality_markup(_, SD_360p=True)
-    if command == "SD_480p":
-        await save_video_bitrate(
-            CallbackQuery.message.chat.id, "SD_480p"
-        )
-        buttons = video_quality_markup(_, SD_480p=True)
-    if command == "HD_720p":
-        await save_video_bitrate(
-            CallbackQuery.message.chat.id, "HD_720p"
-        )
-        buttons = video_quality_markup(_, HD_720p=True)
-    if command == "FHD_1080p":
-        await save_video_bitrate(
-            CallbackQuery.message.chat.id, "FHD_1080p"
-        )
-        buttons = video_quality_markup(_, FHD_1080p=True)
-    if command == "QHD_2K":
-        await save_video_bitrate(
-            CallbackQuery.message.chat.id, "QHD_2K"
-        )
-        buttons = video_quality_markup(_, QHD_2K=True)
-    if command == "UHD_4K":
-        await save_video_bitrate(
-            CallbackQuery.message.chat.id, "UHD_4K"
-        )
-        buttons = video_quality_markup(_, UHD_4K=True)
-    try:
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    except MessageNotModified:
-        return
-
-
-# Play Mode Settings
-@app.on_callback_query(
-    filters.regex(
-        pattern=r"^(|MODECHANGE|CHANNELMODECHANGE|PLAYTYPECHANGE)$"
-    )
-    & ~BANNED_USERS
-)
-@ActualAdminCB
-async def playmode_ans(client, CallbackQuery, _):
-    command = CallbackQuery.matches[0].group(1)
-    if command == "CHANNELMODECHANGE":
-        is_non_admin = await is_nonadmin_chat(
-            CallbackQuery.message.chat.id
-        )
-        if not is_non_admin:
-            await add_nonadmin_chat(CallbackQuery.message.chat.id)
-            Group = None
-        else:
-            await remove_nonadmin_chat(CallbackQuery.message.chat.id)
-            Group = True
-        playmode = await get_playmode(CallbackQuery.message.chat.id)
-        Direct = True if playmode == "Direct" else None
-        playty = await get_playtype(CallbackQuery.message.chat.id)
-        Playtype = None if playty == "Everyone" else True
-        buttons = playmode_users_markup(_, Direct, Group, Playtype)
-    if command == "MODECHANGE":
-        try:
-            await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
-        except:
-            pass
-        playmode = await get_playmode(CallbackQuery.message.chat.id)
-        if playmode == "Direct":
-            await set_playmode(
-                CallbackQuery.message.chat.id, "Inline"
-            )
-            Direct = None
-        else:
-            await set_playmode(
-                CallbackQuery.message.chat.id, "Direct"
-            )
-            Direct = True
-        is_non_admin = await is_nonadmin_chat(
-            CallbackQuery.message.chat.id
-        )
-        Group = True if not is_non_admin else None
-        playty = await get_playtype(CallbackQuery.message.chat.id)
-        Playtype = playty != "Everyone"
-        buttons = playmode_users_markup(_, Direct, Group, Playtype)
-    if command == "PLAYTYPECHANGE":
-        try:
-            await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
-        except:
-            pass
-        playty = await get_playtype(CallbackQuery.message.chat.id)
-        if playty == "Everyone":
-            await set_playtype(CallbackQuery.message.chat.id, "Admin")
-            Playtype = False
-        else:
-            await set_playtype(
-                CallbackQuery.message.chat.id, "Everyone"
-            )
-            Playtype = True
-        playmode = await get_playmode(CallbackQuery.message.chat.id)
-        Direct = True if playmode == "Direct" else None
-        is_non_admin = await is_nonadmin_chat(
-            CallbackQuery.message.chat.id
-        )
-        Group = True if not is_non_admin else None
-        buttons = playmode_users_markup(_, Direct, Group, Playtype)
-    try:
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    except MessageNotModified:
-        return
-
-
-# Auth Users Settings
-@app.on_callback_query(
-    filters.regex(pattern=r"^(AUTH|AUTHLIST)$") & ~BANNED_USERS
-)
-@ActualAdminCB
-async def authusers_mar(client, CallbackQuery, _):
-    command = CallbackQuery.matches[0].group(1)
-    if command == "AUTHLIST":
-        _authusers = await get_authuser_names(
-            CallbackQuery.message.chat.id
-        )
-        if not _authusers:
+        @ActualAdminCB
+        async def aud_vid_cb(client, CallbackQuery, _):
+            command = CallbackQuery.matches[0].group(1)
             try:
-                return await CallbackQuery.answer(
-                    _["setting_5"], show_alert=True
-                )
-            except:
-                return
-        else:
-            try:
-                await CallbackQuery.answer(
-                    _["set_cb_7"], show_alert=True
-                )
+                await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
             except:
                 pass
-            j = 0
-            await CallbackQuery.edit_message_text(_["auth_6"])
-            msg = _["auth_7"]
-            for note in _authusers:
-                _note = await get_authuser(
-                    CallbackQuery.message.chat.id, note
-                )
-                user_id = _note["auth_user_id"]
-                admin_id = _note["admin_id"]
-                admin_name = _note["admin_name"]
-                try:
-                    user = await client.get_users(user_id)
-                    user = user.first_name
-                    j += 1
-                except Exception:
-                    continue
-                msg += f"{j}➤ {user}[`{user_id}`]\n"
-                msg += (
-                    f"   {_['auth_8']} {admin_name}[`{admin_id}`]\n\n"
-                )
-            upl = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=_["BACK_BUTTON"], callback_data="AU"
-                        ),
-                        InlineKeyboardButton(
-                            text=_["CLOSE_BUTTON"], callback_data="close"
-                        ),
-                    ]
-                ]
-            )
+            
+            if command in ["LOW", "MEDIUM", "HIGH", "STUDIO"]:
+                await save_audio_bitrate(CallbackQuery.message.chat.id, command)
+                buttons = audio_quality_markup(_, **{command: True})
+            elif command in ["SD_360p", "SD_480p", "HD_720p", "FHD_1080p", "QHD_2K", "UHD_4K"]:
+                await save_video_bitrate(CallbackQuery.message.chat.id, command)
+                buttons = video_quality_markup(_, **{command: True})
+            
             try:
-                return await CallbackQuery.edit_message_text(
-                    msg, reply_markup=upl
+                return await CallbackQuery.edit_message_reply_markup(
+                    reply_markup=InlineKeyboardMarkup(buttons)
                 )
             except MessageNotModified:
                 return
-    try:
-        await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
-    except:
-        pass
-    if command == "AUTH":
-        is_non_admin = await is_nonadmin_chat(
-            CallbackQuery.message.chat.id
-        )
-        if not is_non_admin:
-            await add_nonadmin_chat(CallbackQuery.message.chat.id)
-            buttons = auth_users_markup(_)
-        else:
-            await remove_nonadmin_chat(CallbackQuery.message.chat.id)
-            buttons = auth_users_markup(_, True)
-    try:
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    except MessageNotModified:
-        return
 
 
-## Clean Mode
+        # Play Mode Settings
+        @app.on_callback_query(
+            filters.regex(
+                pattern=r"^(|MODECHANGE|CHANNELMODECHANGE|PLAYTYPECHANGE)$"
+            )
+            & ~BANNED_USERS
+        )
+        @ActualAdminCB
+        async def playmode_ans(client, CallbackQuery, _):
+            command = CallbackQuery.matches[0].group(1)
+            
+            if command == "CHANNELMODECHANGE":
+                is_non_admin = await is_nonadmin_chat(CallbackQuery.message.chat.id)
+                if not is_non_admin:
+                    await add_nonadmin_chat(CallbackQuery.message.chat.id)
+                    Group = None
+                else:
+                    await remove_nonadmin_chat(CallbackQuery.message.chat.id)
+                    Group = True
+            elif command == "MODECHANGE":
+                try:
+                    await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
+                except:
+                    pass
+                playmode = await get_playmode(CallbackQuery.message.chat.id)
+                if playmode == "Direct":
+                    await set_playmode(CallbackQuery.message.chat.id, "Inline")
+                    Direct = None
+                else:
+                    await set_playmode(CallbackQuery.message.chat.id, "Direct")
+                    Direct = True
+                is_non_admin = await is_nonadmin_chat(CallbackQuery.message.chat.id)
+                Group = True if not is_non_admin else None
+            elif command == "PLAYTYPECHANGE":
+                try:
+                    await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
+                except:
+                    pass
+                playty = await get_playtype(CallbackQuery.message.chat.id)
+                if playty == "Everyone":
+                    await set_playtype(CallbackQuery.message.chat.id, "Admin")
+                    Playtype = False
+                else:
+                    await set_playtype(CallbackQuery.message.chat.id, "Everyone")
+                    Playtype = True
+                playmode = await get_playmode(CallbackQuery.message.chat.id)
+                Direct = True if playmode == "Direct" else None
+                is_non_admin = await is_nonadmin_chat(CallbackQuery.message.chat.id)
+                Group = True if not is_non_admin else None
+            
+            buttons = playmode_users_markup(_, Direct, Group, Playtype)
+            
+            try:
+                return await CallbackQuery.edit_message_reply_markup(
+                    reply_markup=InlineKeyboardMarkup(buttons)
+                )
+            except MessageNotModified:
+                return
 
 
-@app.on_callback_query(
-    filters.regex(
-        pattern=r"^(CLEANMODE|COMMANDELMODE|SUGGESTIONCHANGE)$"
-    )
-    & ~BANNED_USERS
-)
-@ActualAdminCB
-async def cleanmode_mark(client, CallbackQuery, _):
-    command = CallbackQuery.matches[0].group(1)
-    try:
-        await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
-    except:
-        pass
-    if command == "CLEANMODE":
-        sta = None
-        if await is_commanddelete_on(CallbackQuery.message.chat.id):
-            sta = True
-        sug = None
-        if await is_suggestion(CallbackQuery.message.chat.id):
-            sug = True
-        cle = None
-        if await is_cleanmode_on(CallbackQuery.message.chat.id):
-            await cleanmode_off(CallbackQuery.message.chat.id)
-        else:
-            await cleanmode_on(CallbackQuery.message.chat.id)
-            cle = True
-        buttons = cleanmode_settings_markup(
-            _, status=cle, dels=sta, sug=sug
+        # Auth Users Settings
+        @app.on_callback_query(
+            filters.regex(pattern=r"^(AUTH|AUTHLIST)$") & ~BANNED_USERS
         )
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
+        @ActualAdminCB
+        async def authusers_mar(client, CallbackQuery, _):
+            command = CallbackQuery.matches[0].group(1)
+            
+            if command == "AUTHLIST":
+                _authusers = await get_authuser_names(CallbackQuery.message.chat.id)
+                if not _authusers:
+                    try:
+                        return await CallbackQuery.answer(_["setting_5"], show_alert=True)
+                    except:
+                        return
+                else:
+                    try:
+                        await CallbackQuery.answer(_["set_cb_7"], show_alert=True)
+                    except:
+                        pass
+                    j = 0
+                    await CallbackQuery.edit_message_text(_["auth_6"])
+                    msg = _["auth_7"]
+                    for note in _authusers:
+                        _note = await get_authuser(CallbackQuery.message.chat.id, note)
+                        user_id = _note["auth_user_id"]
+                        admin_id = _note["admin_id"]
+                        admin_name = _note["admin_name"]
+                        try:
+                            user = await client.get_users(user_id)
+                            user = user.first_name
+                            j += 1
+                        except Exception:
+                            continue
+                        msg += f"{j}➤ {user}[`{user_id}`]\n"
+                        msg += f"   {_['auth_8']} {admin_name}[`{admin_id}`]\n\n"
+                    upl = InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    text=_["BACK_BUTTON"], callback_data="AU"
+                                ),
+                                InlineKeyboardButton(
+                                    text=_["CLOSE_BUTTON"], callback_data="close"
+                                ),
+                            ]
+                        ]
+                    )
+                    try:
+                        return await CallbackQuery.edit_message_text(msg, reply_markup=upl)
+                    except MessageNotModified:
+                        return
+            try:
+                await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
+            except:
+                pass
+            if command == "AUTH":
+                is_non_admin = await is_nonadmin_chat(CallbackQuery.message.chat.id)
+                if not is_non_admin:
+                    await add_nonadmin_chat(CallbackQuery.message.chat.id)
+                else:
+                    await remove_nonadmin_chat(CallbackQuery.message.chat.id)
+            
+            buttons = auth_users_markup(_, is_non_admin)
+            
+            try:
+                return await CallbackQuery.edit_message_reply_markup(
+                    reply_markup=InlineKeyboardMarkup(buttons)
+                )
+            except MessageNotModified:
+                return
+
+
+        ## Clean Mode
+        @app.on_callback_query(
+            filters.regex(pattern=r"^(CLEANMODE|COMMANDELMODE|SUGGESTIONCHANGE)$")
+            & ~BANNED_USERS
         )
-    if command == "COMMANDELMODE":
-        cle = None
-        sta = None
-        if await is_cleanmode_on(CallbackQuery.message.chat.id):
-            cle = True
-        sug = None
-        if await is_suggestion(CallbackQuery.message.chat.id):
-            sug = True
-        if await is_commanddelete_on(CallbackQuery.message.chat.id):
-            await commanddelete_off(CallbackQuery.message.chat.id)
-        else:
-            await commanddelete_on(CallbackQuery.message.chat.id)
-            sta = True
-        buttons = cleanmode_settings_markup(
-            _, status=cle, dels=sta, sug=sug
-        )
-    if command == "SUGGESTIONCHANGE":
-        cle = None
-        sta = None
-        if await is_cleanmode_on(CallbackQuery.message.chat.id):
-            cle = True
-        if await is_commanddelete_on(CallbackQuery.message.chat.id):
-            sta = True
-        if await is_suggestion(CallbackQuery.message.chat.id):
-            await suggestion_off(CallbackQuery.message.chat.id)
-            sug = False
-        else:
-            await suggestion_on(CallbackQuery.message.chat.id)
-            sug = True
-        buttons = cleanmode_settings_markup(
-            _, status=cle, dels=sta, sug=sug
-        )
-    try:
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    except MessageNotModified:
-        return
+        @ActualAdminCB
+        async def cleanmode_mark(client, CallbackQuery, _):
+            command = CallbackQuery.matches[0].group(1)
+            
+            try:
+                await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
+            except:
+                pass
+            
+            if command == "CLEANMODE":
+                if await is_cleanmode_on(CallbackQuery.message.chat.id):
+                    await cleanmode_off(CallbackQuery.message.chat.id)
+                    cle = None
+                else:
+                    await cleanmode_on(CallbackQuery.message.chat.id)
+                    cle = True
+                buttons = cleanmode_settings_markup(_, status=cle)
+            elif command == "COMMANDELMODE":
+                if await is_commanddelete_on(CallbackQuery.message.chat.id):
+                    await commanddelete_off(CallbackQuery.message.chat.id)
+                    sta = None
+                else:
+                    await commanddelete_on(CallbackQuery.message.chat.id)
+                    sta = True
+                buttons = cleanmode_settings_markup(_, dels=sta)
+            elif command == "SUGGESTIONCHANGE":
+                if await is_suggestion(CallbackQuery.message.chat.id):
+                    await suggestion_off(CallbackQuery.message.chat.id)
+                    sug = False
+                else:
+                    await suggestion_on(CallbackQuery.message.chat.id)
+                    sug = True
+                buttons = cleanmode_settings_markup(_, sug=sug)
+            
+            try:
+                return await CallbackQuery.edit_message_reply_markup(
+                    reply_markup=InlineKeyboardMarkup(buttons)
+                )
+            except MessageNotModified:
+                return

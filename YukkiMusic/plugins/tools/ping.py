@@ -20,12 +20,9 @@ from YukkiMusic.core.call import Yukki
 from YukkiMusic.utils import bot_sys_stats
 from YukkiMusic.utils.decorators.language import language
 
-### Commands
-PING_COMMAND = get_command("PING_COMMAND")
-
 
 @app.on_message(
-    filters.command(PING_COMMAND)
+    filters.command(get_command("PING_COMMAND"))
     & filters.group
     & ~BANNED_USERS
 )
